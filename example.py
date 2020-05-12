@@ -21,7 +21,7 @@ __author__ = "Hoyoux Renaud <renaud.hoyoux@cytomine.coop>"
 __copyright__ = "Apache 2 license. Made by Cytomine SCRLFS, Belgium, https://www.cytomine.coop/"
 __version__ = "1.0.0"
 
-# This is a sample of a software to interact with the Cytomine platform using the Cytomine Python client (https://github.com/cytomine/Cytomine-python-client).
+# This is a sample of a software that can be run by the Cytomine platform using the Cytomine Python client (https://github.com/cytomine/Cytomine-python-client).
 
 import os
 import sys
@@ -34,6 +34,8 @@ from cytomine.models import ImageInstanceCollection, JobData
 
 # -----------------------------------------------------------------------------------------------------------
 def run(cyto_job, parameters):
+    logging.info("----- test software v%s -----", __version__)
+    logging.info("Entering run(cyto_job=%s, parameters=%s)", cyto_job, parameters)
 
     job = cyto_job.job
     project = cyto_job.project
@@ -86,7 +88,7 @@ def run(cyto_job, parameters):
         shutil.rmtree(working_path, ignore_errors=True)
 
 
-        logging.debug("End")
+        logging.debug("Leaving run()")
 
 
 if __name__ == "__main__":
