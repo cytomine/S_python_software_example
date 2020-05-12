@@ -34,48 +34,49 @@ from cytomine.models import ImageInstanceCollection
 
 # -----------------------------------------------------------------------------------------------------------
 def run(cyto_job, parameters):
+
     job = cyto_job.job
     project = cyto_job.project
 
-        working_path = parameters.working_path
-        if not os.path.exists(working_path):
-            logging.info("Creating working directory: %s", working_path)
-            os.makedirs(working_path)
+    working_path = parameters.working_path
+    if not os.path.exists(working_path):
+        logging.info("Creating working directory: %s", working_path)
+        os.makedirs(working_path)
 
-        try:
-            test_int_parameter = int(parameters.my_integer_parameter)
+    try:
+        test_int_parameter = int(parameters.my_integer_parameter)
 
-            logging.info("Display test_int_parameter %s", test_int_parameter)
+        logging.info("Display test_int_parameter %s", test_int_parameter)
 
-            # loop for images in the project 
-            images = ImageInstanceCollection().fetch_with_filter("project", project.id)
-            nb_images = len(images)
-            logging.info("# images in project: %d", nb_images)
+        # loop for images in the project
+        images = ImageInstanceCollection().fetch_with_filter("project", project.id)
+        nb_images = len(images)
+        logging.info("# images in project: %d", nb_images)
 
-            #value between 0 and 100 that represent the progress bar displayed in the UI.
-            progress = 0
-            progress_delta = 100 / nb_images
+        #value between 0 and 100 that represent the progress bar displayed in the UI.
+        progress = 0
+        progress_delta = 100 / nb_images
 
-            # Go through all images
-            for (i, image) in enumerate(images):
-                image_str = "{} ({}/{})".format(image.instanceFilename, i+1, nb_images)
+        # Go through all images
+        for (i, image) in enumerate(images):
+            image_str = "{} ({}/{})".format(image.instanceFilename, i+1, nb_images)
 
-                logging.debug("Image id: %d width: %d height: %d resolution: %f magnification: %d filename: %s", image.id,
-                              image.width, image.height, image.resolution, image.magnification, image.filename)
-
-
-
-                logging.info("Finished processing image %s", image.instanceFilename)
-                progress += progress_delta
+            logging.debug("Image id: %d width: %d height: %d resolution: %f magnification: %d filename: %s", image.id,
+                          image.width, image.height, image.resolution, image.magnification, image.filename)
 
 
-            output_path = os.path.join(working_path, "output.txt")
-            f= open(output_path,"w+")
-            f.write("Input given was %d\r\n" % test_int_parameter)
-            f.close() 
 
-        finally:
-            logging.debug("End")
+            logging.info("Finished processing image %s", image.instanceFilename)
+            progress += progress_delta
+
+
+        output_path = os.path.join(working_path, "output.txt")
+        f= open(output_path,"w+")
+        f.write("Input given was %d\r\n" % test_int_parameter)
+        f.close()
+
+    finally:
+        logging.debug("End")
 
 
 if __name__ == "__main__":
