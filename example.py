@@ -27,28 +27,15 @@ import os
 import sys
 import logging
 import shutil
-from argparse import ArgumentParser
 
-from cytomine import Cytomine
+import cytomine
 from cytomine.models import ImageInstanceCollection
 
 
 # -----------------------------------------------------------------------------------------------------------
-if __name__ == "__main__":
-    logging.debug("Command: %s", sys.argv)
-
-    parser = ArgumentParser(prog="Cytomine Python client example")
-
-    # Cytomine
-    parser.add_argument('--host', dest='host', default='demo.cytomine.be', help="The Cytomine host")
-    parser.add_argument('--public_key', dest='public_key', help="The Cytomine public key")
-    parser.add_argument('--private_key', dest='private_key', help="The Cytomine private key")
-    parser.add_argument('--project_id', dest='project_id', help="The targeted project id")
-    parser.add_argument('--working_path', dest='working_path', help="The working path where files will be saved")
-    parser.add_argument('--my_integer_parameter', dest='my_integer_parameter', help="The tested input")
-    parameters, other = parser.parse_known_args(sys.argv[1:])
-
-    with Cytomine(host=parameters.host, public_key=parameters.public_key, private_key=parameters.private_key) as cytomine:
+def run(cyto_job, parameters):
+    job = cyto_job.job
+    project = cyto_job.project
 
         working_path = parameters.working_path
         if not os.path.exists(working_path):
@@ -61,7 +48,7 @@ if __name__ == "__main__":
             logging.info("Display test_int_parameter %s", test_int_parameter)
 
             # loop for images in the project 
-            images = ImageInstanceCollection().fetch_with_filter("project", parameters.project_id)
+            images = ImageInstanceCollection().fetch_with_filter("project", project.id)
             nb_images = len(images)
             logging.info("# images in project: %d", nb_images)
 
@@ -90,5 +77,11 @@ if __name__ == "__main__":
         finally:
             logging.debug("End")
 
+
+if __name__ == "__main__":
+    logging.debug("Command: %s", sys.argv)
+
+    with cytomine.CytomineJob.from_cli(sys.argv) as cyto_job:
+        run(cyto_job, cyto_job.parameters)
 
 
